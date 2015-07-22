@@ -5,6 +5,19 @@ module Cropio::Connection::Authenticable
 
   protected
 
+  def authenticate_before(method)
+    class << self
+      eval <<-RUBY
+        alias #{method} #{method}_without_authentication
+
+        def #{method}
+          authenticate! if !authenticated?
+          #{method}_without_authentication
+        end
+RUBY
+    end
+  end
+
   def auth_request
     result = RestClient.post("#{BASE_URL}/sign_in", auth_request_params.to_json,
                         authentication_headers)
@@ -29,5 +42,9 @@ module Cropio::Connection::Authenticable
         password: Cropio.credentials.password
       }
     }
+  end
+
+  def authenticated?
+    Cropio.credentials.api_token.present?
   end
 end

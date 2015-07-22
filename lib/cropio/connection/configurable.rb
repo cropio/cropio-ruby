@@ -8,10 +8,6 @@ module Cropio::Connection::Configurable
     authenticated? ? authenticated_headers : authentication_headers
   end
 
-  def authenticated?
-    Cropio.credentials.api_token.present?
-  end
-
   def authentication_headers
     { 'content-type' => 'application/json' }
   end
