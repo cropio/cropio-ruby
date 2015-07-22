@@ -1,13 +1,13 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'cropio/ruby/version'
+require 'cropio/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "cropio-ruby"
-  spec.version       = Cropio::Ruby::VERSION
+  spec.version       = Cropio::VERSION
   spec.authors       = ["Sergey Vernidub"]
-  spec.email         = ["svernidub@gmail.com"]
+  spec.email         = ["sergey.vernidub@cropio.com"]
 
   spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
   spec.description   = %q{TODO: Write a longer description or delete this line.}
@@ -25,6 +25,9 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
+
+  spec.add_dependency 'json'
+  spec.add_dependency 'rest-client'
 
   spec.add_development_dependency "bundler", "~> 1.9"
   spec.add_development_dependency "rake", "~> 10.0"
