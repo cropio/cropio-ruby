@@ -46,7 +46,7 @@ module Cropio
       def define_attribute_question(attribute_name)
         eval "
           def #{attribute_name}?
-            attributes['#{attribute_name}'].present?
+            !attributes['#{attribute_name}'].nil?
           end
         "
       end

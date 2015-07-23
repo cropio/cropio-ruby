@@ -1,12 +1,14 @@
 require 'ostruct'
-require "cropio/version"
+require 'cropio/version'
+require 'cropio/connection'
+require 'cropio/resource'
 
 module Cropio
-  def credentials
+  def self.credentials
     @credentials
   end
 
-  def credentials=(credentials)
+  def self.credentials=(credentials)
     case credentials
     when Hash
       @credentials = OpenStruct.new(credentials)

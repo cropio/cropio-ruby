@@ -3,5 +3,7 @@ require_relative './connection/authenticable'
 require_relative './connection/proxiable'
 require_relative './connection/proxy'
 
-module Cropio::Connection
+module Cropio
+  module Connection
+  end
 end

@@ -1,7 +1,11 @@
-require'rest-client'
+module Cropio
+  module Connection
+    class Proxy
+      extend Authenticable
+      extend Configurable
+      extend Proxiable
 
-class Cropio::Connection::Proxy
-  extend Configurable
-  extend Authenticable
-  extend Proxiable
+      authenticate_before :get, :post, :patch, :delete
+    end
+  end
 end

@@ -1,27 +1,29 @@
-module Cropio::Connection::Proxiable
-  def get(resource, query)
-    JSON.parse RestClient.get(url_for(resource), query, headers)
-  end
-  authenticate_before :get
+require'rest-client'
 
-  def post(resource, data)
-    JSON.parse RestClient.post(url_for(resource), data.to_json, headers)
-  end
-  authenticate_before :post
+module Cropio
+  module Connection
+    module Proxiable
+      def get(resource, query={})
+        JSON.parse RestClient::Request.execute(method: :get, url: url_for(resource), headers: {params: query}.merge(headers))
+      end
 
-  def patch(resource, data)
-    JSON.parse RestClient.patch(url_for(resource), data.to_json, headers)
-  end
-  authenticate_before :patch
+      def post(resource, data)
+        JSON.parse RestClient.post(url_for(resource), data.to_json, headers)
+      end
 
-  def delete(resource)
-    JSON.parse RestClient.delete(url_for(resource), headers)
-  end
-  authenticate_before :delete
+      def patch(resource, data)
+        JSON.parse RestClient.patch(url_for(resource), data.to_json, headers)
+      end
 
-  protected
+      def delete(resource)
+        JSON.parse RestClient.delete(url_for(resource), headers)
+      end
 
-  def url_for(resource)
-    "#{BASE_URL}/resource"
+      protected
+
+      def url_for(resource)
+        "#{Cropio::Connection::Configurable::BASE_URL}/#{resource}"
+      end
+    end
   end
 end
