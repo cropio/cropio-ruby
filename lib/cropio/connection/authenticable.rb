@@ -22,7 +22,7 @@ module Cropio
                                   auth_request_params.to_json,
                                   authentication_headers)
       rescue RestClient::Unauthorized => e
-        rocess_result(e.http_body)
+        process_result(e.http_body)
       end
 
       def process_result(result)

@@ -11,7 +11,7 @@ module Cropio
       end
 
       def authentication_headers
-        { 'content-type' => 'application/json' }
+        { content_type: :json, accept: :json }
       end
 
       def authenticated_headers
