@@ -1,7 +1,9 @@
 require 'ostruct'
+require 'cropio/misc'
 require 'cropio/version'
 require 'cropio/connection'
 require 'cropio/resource'
+require 'cropio/cropio_resources'
 
 module Cropio
   def self.credentials
