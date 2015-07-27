@@ -9,6 +9,15 @@ module Cropio
           .tr("-", "_")
           .downcase
       end
+
+      # simple implementation - for resources plural form only
+      def pluralize(string)
+        if string[-1] == 'y'
+          "#{ string[0..(string.length - 2)] }ies"
+        else
+          "#{ string }s"
+        end
+      end
     end
   end
 end

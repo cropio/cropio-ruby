@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "byebug"
+require "cropio"
+
+require "pry"
+
+Cropio.credentials = {}.tap do |c|
+  print "Enter your Cropio email: "
+  c[:email] = STDIN.gets.chomp
+
+  print "Entrer your Cropio password: "
+  c[:password] = STDIN.noecho(&:gets).chomp
+
+  puts
+end
+
+Pry.start
