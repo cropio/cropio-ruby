@@ -7,8 +7,7 @@ module Cropio
       Limit = 1000
 
       def initialize(attributes={})
-        @attributes = attributes
-        define_attributes_accessors
+        self.attributes = attributes
       end
 
       def self.resource_name
@@ -65,9 +64,7 @@ module Cropio
       end
 
       def self.to_instance(attr_set)
-        new(attr_set).tap do |instance|
-          instance.attributes['id'] = attr_set['id']
-        end
+        new(attr_set)
       end
     end
   end

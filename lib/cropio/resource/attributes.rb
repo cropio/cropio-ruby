@@ -7,23 +7,31 @@ module Cropio
 
       protected
 
+      def attributes
+        @attributes ||= {}
+      end
+
+      def attributes=(val)
+        @attributes = val
+      end
+
       def define_attributes_accessors
-        attributes.each do |attribute_name|
+        attributes.each_key do |attribute_name|
           next if attribute_defined?(attribute_name)
           define_attribute_getter(attribute_name)
           define_attribute_setter(attribute_name)
           define_attribute_question(attribute_name)
-          define!(attribute_name)
+          defined!(attribute_name)
         end
       end
 
-      def attribute_defined?(name)
-        @defined_attr ||= []
-        @defined_attr[attribute_name] || false
+      def attribute_defined?(attribute_name)
+        @defined_attr ||= {}
+        @defined_attr[attribute_name] ||= false
       end
 
-      def defined!(name)
-        @defined_attr ||= []
+      def defined!(attribute_name)
+        @defined_attr ||= {}
         @defined_attr[attribute_name] = true
       end
 
@@ -51,10 +59,14 @@ module Cropio
         "
       end
 
-      def method_missing(name, *attr, &block)
-        if name.to_s.match(/\A[a-z]\w+=\z/).zero?
-          attributes[name.gsub('=', '')] = attr.first
+      def method_missing(name, *attrs, &block)
+        name = name.to_s
+        attr_name = name.gsub('=', '')
+        if attributes.has_key?(attr_name)
           define_attributes_accessors
+          name == attr_name ? send(name) : send(name, attrs.first)
+        else
+          super
         end
       end
     end
