@@ -26,10 +26,27 @@ module Cropio
       end
 
       def persisted?
-        !id.nil?
+        if @persisted.nil?
+          @persisted = false
+        end
+
+        @persisted
+      end
+
+      def save
+        self.attributes = if @persisted
+          Proxy.patch("#{resources_name}/#{id}", attributes)
+        else
+          Proxy.post(resources_name, attributes)
+          @persisted = true
+        end
       end
 
       private
+      def resources_name
+        self.class.resources_name
+      end
+
       def self.get_all_chunks(options={})
         response = nil
         buffer = []
@@ -64,7 +81,11 @@ module Cropio
       end
 
       def self.to_instance(attr_set)
-        new(attr_set)
+        new(attr_set).tap do |resource|
+          resource.instance_eval do
+            @persisted = true
+          end
+        end
       end
     end
   end
