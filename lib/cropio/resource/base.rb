@@ -22,6 +22,10 @@ module Cropio
         to_instances(get_all_chunks)
       end
 
+      def self.count
+        all.count
+      end
+
       def self.select(options={})
       end
 
@@ -34,11 +38,11 @@ module Cropio
       end
 
       def save
-        self.attributes = if @persisted
+        self.attributes = if persisted?
           Proxy.patch("#{resources_name}/#{id}", attributes)
         else
-          Proxy.post(resources_name, attributes)
           @persisted = true
+          Proxy.post(resources_name, attributes)
         end
       end
 

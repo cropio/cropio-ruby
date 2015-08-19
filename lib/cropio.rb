@@ -3,7 +3,7 @@ require 'cropio/misc'
 require 'cropio/version'
 require 'cropio/connection'
 require 'cropio/resource'
-require 'cropio/cropio_resources'
+require 'cropio/resources'
 
 module Cropio
   def self.credentials

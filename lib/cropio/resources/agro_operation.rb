@@ -1,5 +1,5 @@
 module Cropio
-  module CropioResources
+  module Resources
     class AgroOperation < Cropio::Resource::Base
     end
   end
