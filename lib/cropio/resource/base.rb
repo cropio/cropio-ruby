@@ -46,6 +46,16 @@ module Cropio
         end
       end
 
+      def destroy?
+        if persisted?
+          Proxy.delete("#{resources_name}/#{id}")
+          @persisted = false
+          true
+        else
+          raise 'Cropio record is not persisted!'
+        end
+      end
+
       private
       def resources_name
         self.class.resources_name

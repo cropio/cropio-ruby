@@ -21,7 +21,61 @@ Or install it yourself as:
 
 ## Usage
 
-You
+Require it:
+
+    $ require 'cropio'
+
+To load Cropio resources to current namespace:
+
+```ruby
+include Cropio::Resources
+```
+
+You need to specify your email and password. At first time when you'll
+try to request some data from Cropio gem will get authentication token.
+
+```ruby
+Cropio.credentials = {
+  email: 'your account email,
+  password: 'your password'
+}
+
+Crop.all
+
+Cropio.credentials.api_token
+=> "authenticationToken"
+```
+
+Currently supported API methods is:
+
+- index
+
+```ruby
+Crop.all
+```
+
+- create
+
+```ruby
+Crop.new(name: 'new crop').save
+```
+
+- update
+
+```ruby
+crop = Crop.all.last
+crop.short_name = 'new'
+crop.save
+
+```
+
+
+- delete
+
+```ruby
+crop = Crop.all.last
+crop.destroy
+```
 
 ## Development
 
