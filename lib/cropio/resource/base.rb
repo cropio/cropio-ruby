@@ -46,7 +46,7 @@ module Cropio
         end
       end
 
-      def destroy?
+      def destroy
         if persisted?
           Proxy.delete("#{resources_name}/#{id}")
           @persisted = false
