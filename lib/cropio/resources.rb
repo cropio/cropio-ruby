@@ -28,6 +28,6 @@ require_relative './resources/seed'
 require_relative './resources/user'
 
 module Cropio
-  module CropioResources
+  module Resources
   end
 end
