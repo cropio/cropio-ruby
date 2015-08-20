@@ -23,7 +23,9 @@ Or install it yourself as:
 
 Require it:
 
-    $ require 'cropio'
+```ruby
+require 'cropio'
+```
 
 To load Cropio resources to current namespace:
 
