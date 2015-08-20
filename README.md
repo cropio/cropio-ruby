@@ -38,7 +38,7 @@ try to request some data from Cropio gem will get authentication token.
 
 ```ruby
 Cropio.credentials = {
-  email: 'your account email,
+  email: 'your account email',
   password: 'your password'
 }
 
