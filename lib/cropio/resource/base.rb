@@ -76,7 +76,7 @@ module Cropio
         limit = options[:limit] || (2**32 - 1)
         while data?(response) && limit > 0
           limit -= limit < LIMIT ? limit : LIMIT
-          response = get_chunk(limit: chunk_size, from_id: offset(buffer))
+          response = get_chunk(limit: limit, from_id: offset(buffer))
           buffer += response['data']
         end
         buffer
