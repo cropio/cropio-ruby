@@ -1,5 +1,6 @@
 module Cropio
   module Resource
+    # Defines accessors for resource attrubutes.
     module Attributes
       def self.included(base)
         base.send(:attr_accessor, :attributes)
@@ -36,7 +37,7 @@ module Cropio
       end
 
       def define_attribute_getter(attribute_name)
-        eval "
+        instance_eval "
           def #{attribute_name}
             attributes['#{attribute_name}']
           end
@@ -44,7 +45,7 @@ module Cropio
       end
 
       def define_attribute_setter(attribute_name)
-        eval "
+        instance_eval "
           def #{attribute_name}=(val)
             attributes['#{attribute_name}'] = val
           end
@@ -52,7 +53,7 @@ module Cropio
       end
 
       def define_attribute_question(attribute_name)
-        eval "
+        instance_eval "
           def #{attribute_name}?
             !attributes['#{attribute_name}'].nil?
           end
@@ -61,8 +62,8 @@ module Cropio
 
       def method_missing(name, *attrs, &block)
         name = name.to_s
-        attr_name = name.gsub('=', '')
-        if attributes.has_key?(attr_name)
+        attr_name = name.delete('=')
+        if attributes.key?(attr_name)
           define_attributes_accessors
           name == attr_name ? send(name) : send(name, attrs.first)
         else

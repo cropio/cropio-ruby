@@ -1,81 +1,94 @@
 module Cropio
   module Resource
+    # Represents ActiveRecord::Base-like model's class
+    # with Cropio data selection and mutation.
     class Base
       include Attributes
 
-      Proxy = Cropio::Connection::Proxy
-      Limit = 1000
+      PROXY = Cropio::Connection::Proxy
+      LIMIT = 1000
 
-      def initialize(attributes={})
+      def initialize(attributes = {})
         self.attributes = attributes
       end
 
+      # Returns name of Resource
       def self.resource_name
         @resource_name ||= StringInflector.underscore(name.split('::').last)
       end
 
+      # Return pluralized version of Resource's name
       def self.resources_name
         @resources_name ||= StringInflector.pluralize(resource_name)
       end
 
+      # Get all resources.
       def self.all
         to_instances(get_all_chunks)
       end
 
+      # Count all resources.
       def self.count
         all.count
       end
 
-      def self.select(options={})
-      end
-
+      # Returns persistance of the resource.
+      # Resource is persisted if it is saved
+      # and not deleted, if this resource exists
+      # on Cropio servers.
       def persisted?
-        if @persisted.nil?
-          @persisted = false
-        end
-
-        @persisted
+        @persisted.nil? && (@persisted ||= false)
       end
 
+      # Saves current resource to Cropio.
       def save
-        self.attributes = if persisted?
-          Proxy.patch("#{resources_name}/#{id}", attributes)
-        else
-          @persisted = true
-          Proxy.post(resources_name, attributes)
-        end
+        self.attributes =
+          if persisted?
+            PROXY.patch("#{resources_name}/#{id}", attributes)
+          else
+            @persisted = true
+            PROXY.post(resources_name, attributes)
+          end
       end
 
+      # Remove this resource from Cropio.
       def destroy
         if persisted?
-          Proxy.delete("#{resources_name}/#{id}")
+          PROXY.delete("#{resources_name}/#{id}")
           @persisted = false
           true
         else
-          raise 'Cropio record is not persisted!'
+          fail 'Cropio record is not persisted!'
         end
       end
 
       private
+
+      # Returns pluralized name of own type.
       def resources_name
         self.class.resources_name
       end
 
-      def self.get_all_chunks(options={})
+      # Download resources from Cropio by Chunks.
+      def self.get_all_chunks(options = {})
         response = nil
         buffer = []
-        limit = options[:limit] || (2 ** 32 - 1)
-        while is_data?(response) && limit > 0
-          chunk_size = limit < Limit ? limit : Limit
-          limit -= chunk_size
-          offset = buffer.any? ? buffer.last['id'] + 1 : 0
-          response = get_chunk(limit: chunk_size, from_id: offset)
+        limit = options[:limit] || (2**32 - 1)
+        while data?(response) && limit > 0
+          limit -= limit < LIMIT ? limit : LIMIT
+          response = get_chunk(limit: chunk_size, from_id: offset(buffer))
           buffer += response['data']
         end
         buffer
       end
 
-      def self.is_data?(response=nil)
+      # Gets offset for next chunk during download.
+      def self.offset(buffer)
+        buffer.any? ? buffer.last['id'] + 1 : 0
+      end
+
+      # Returns false if chunk is not empty.
+      def self.data?(response = nil)
         if response.nil?
           true
         else
@@ -83,17 +96,21 @@ module Cropio
         end
       end
 
+      # Download chunk from Cropio.
       def self.get_chunk(options)
-        Proxy.get(resources_name, limit: options[:limit],
-                    from_id: options[:from_id])
+        PROXY.get(resources_name,
+                  limit: options[:limit],
+                  from_id: options[:from_id])
       end
 
+      # Converts each received attribute's hash to resources.
       def self.to_instances(attr_sets)
         attr_sets.map do |attr_set|
           to_instance(attr_set)
         end
       end
 
+      # Converts specified attribute's hash to resource.
       def self.to_instance(attr_set)
         new(attr_set).tap do |resource|
           resource.instance_eval do
