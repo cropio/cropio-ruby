@@ -1,4 +1,5 @@
 require 'ostruct'
+require 'json'
 require 'cropio/misc'
 require 'cropio/version'
 require 'cropio/connection'
