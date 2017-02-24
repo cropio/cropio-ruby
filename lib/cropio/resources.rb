@@ -26,6 +26,9 @@ require_relative './resources/plant_threat'
 require_relative './resources/satellite_image'
 require_relative './resources/seed'
 require_relative './resources/user'
+require_relative './resources/user_role'
+require_relative './resources/user_role_assignment'
+require_relative './resources/user_role_permission'
 
 module Cropio
   module Resources
