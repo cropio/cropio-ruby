@@ -34,16 +34,6 @@ module Cropio
         url
       end
 
-      def url_for_changes(resource, from_time, to_time)
-        params = url_changes_params(from_time, to_time)
-        "#{Cropio::Connection::Configurable::BASE_URL}/"\
-        "#{resource}/changes?#{params}"
-      end
-
-      def url_changes_params(from_time, to_time)
-        "from_time=#{from_time}&to_time=#{to_time}"
-      end
-
       def extract_resource_method!(query)
         fail(ArgumentError) unless query.is_a?(Hash)
         query.delete(:resource_method)
