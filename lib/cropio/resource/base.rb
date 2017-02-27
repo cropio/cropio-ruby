@@ -8,6 +8,8 @@ module Cropio
       PROXY = Cropio::Connection::Proxy
       LIMIT = 1000
 
+      TO_TIME = DateTime.new(2100)
+
       def initialize(attributes = {})
         self.attributes = attributes
       end
@@ -30,6 +32,10 @@ module Cropio
       # Count all resources.
       def self.count
         all.count
+      end
+
+      def self.changes(from_time, to_time = TO_TIME)
+        to_instances(get_all_changes(from_time, to_time))
       end
 
       # Returns persistance of the resource.
@@ -82,6 +88,25 @@ module Cropio
         buffer
       end
 
+      def self.get_all_changes(from_time, to_time)
+        response = nil
+        buffer = []
+        limit = 2**32 - 1
+        while data?(response) && limit > 0
+          response = get_changes(limit: limit,
+                                 from_time: from_time,
+                                 to_time: to_time)
+          limit -= limit < LIMIT ? limit : LIMIT
+          to_time = last_record_time(response) || from_time
+          buffer += response['data']
+        end
+        buffer
+      end
+
+      def self.last_record_time(response)
+        response['meta']['response']['last_record_time']
+      end
+
       # Gets offset for next chunk during download.
       def self.offset(buffer)
         buffer.any? ? buffer.last['id'] + 1 : 0
@@ -101,6 +126,13 @@ module Cropio
         PROXY.get(resources_name,
                   limit: options[:limit],
                   from_id: options[:from_id])
+      end
+
+      def self.get_changes(options)
+        PROXY.changes(resources_name,
+                      limit: options[:limit],
+                      from_time: options[:from_time],
+                      to_time: options[:to_time])
       end
 
       # Converts each received attribute's hash to resources.

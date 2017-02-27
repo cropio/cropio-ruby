@@ -24,10 +24,27 @@ module Cropio
         proxy(method: :delete, url: url_for(resource))
       end
 
+      def changes(resource, query = {})
+        proxy(method: :get,
+              url: url_for_changes(resource,
+                                   query[:from_time], query[:to_time]),
+              headers: { params: query })
+      end
+
       protected
 
       def url_for(resource)
         "#{Cropio::Connection::Configurable::BASE_URL}/#{resource}"
+      end
+
+      def url_for_changes(resource, from_time, to_time)
+        params = url_changes_params(from_time, to_time)
+        "#{Cropio::Connection::Configurable::BASE_URL}/"\
+        "#{resource}/changes?#{params}"
+      end
+
+      def url_changes_params(from_time, to_time)
+        "from_time=#{from_time}&to_time=#{to_time}"
       end
 
       def proxy(options)
