@@ -79,6 +79,12 @@ crop = Crop.all.last
 crop.destroy
 ```
 
+- changes
+```ruby
+Crop.changes('2012-01-01', '2016-01-01')
+Crop.changes(Date.new(2012, 1, 1))
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.

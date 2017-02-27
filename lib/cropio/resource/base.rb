@@ -32,12 +32,18 @@ module Cropio
         all.count
       end
 
+      def self.changes(from_time = nil, to_time = nil)
+        from_time = to_datetime_if_string(from_time)
+        to_time = to_datetime_if_string(to_time)
+        to_instances(get_all_changes(from_time, to_time))
+      end
+
       # Returns persistance of the resource.
       # Resource is persisted if it is saved
       # and not deleted, if this resource exists
       # on Cropio servers.
       def persisted?
-        @persisted.nil? && (@persisted ||= false)
+        !@persisted.nil? && (@persisted ||= false)
       end
 
       # Saves current resource to Cropio.
@@ -64,6 +70,14 @@ module Cropio
 
       private
 
+      def self.to_datetime_if_string(param)
+        if param.is_a?(Date) || param.is_a?(DateTime)
+          param.strftime
+        elsif !param.nil?
+          DateTime.parse(param).strftime
+        end
+      end
+
       # Returns pluralized name of own type.
       def resources_name
         self.class.resources_name
@@ -73,13 +87,31 @@ module Cropio
       def self.get_all_chunks(options = {})
         response = nil
         buffer = []
-        limit = options[:limit] || (2**32 - 1)
+        limit = options[:limit] || (2 ** 32 - 1)
         while data?(response) && limit > 0
           limit -= limit < LIMIT ? limit : LIMIT
           response = get_chunk(limit: limit, from_id: offset(buffer))
           buffer += response['data']
         end
         buffer
+      end
+
+      def self.get_all_changes(from_time, to_time)
+        response = nil
+        buffer = []
+        limit = 2 ** 32 - 1
+        while data?(response) && limit > 0
+          response = get_changes(limit: limit, from_time: from_time,
+                                 to_time: to_time)
+          limit -= limit < LIMIT ? limit : LIMIT
+          to_time = last_record_time(response) || from_time
+          buffer += response['data']
+        end
+        buffer
+      end
+
+      def self.last_record_time(response)
+        response['meta']['response']['last_record_time']
       end
 
       # Gets offset for next chunk during download.
@@ -101,6 +133,14 @@ module Cropio
         PROXY.get(resources_name,
                   limit: options[:limit],
                   from_id: options[:from_id])
+      end
+
+      def self.get_changes(options)
+        PROXY.get(resources_name,
+                  resource_method: :changes,
+                  limit: options[:limit],
+                  from_time: options[:from_time],
+                  to_time: options[:to_time])
       end
 
       # Converts each received attribute's hash to resources.

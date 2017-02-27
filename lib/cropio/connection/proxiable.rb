@@ -6,7 +6,9 @@ module Cropio
     module Proxiable
       # Accepts reources name and params to perform HTTPS GET request.
       def get(resource, query = {})
-        proxy(method: :get, url: url_for(resource), headers: { params: query })
+        rmethod = extract_resource_method!(query)
+        proxy(method: :get, url: url_for(resource, rmethod),
+                            headers: { params: query })
       end
 
       # Accepts reources name and params to perform HTTPS POST request.
@@ -26,18 +28,31 @@ module Cropio
 
       protected
 
-      def url_for(resource)
-        "#{Cropio::Connection::Configurable::BASE_URL}/#{resource}"
+      def url_for(resource, resource_method = nil)
+        url = "#{Cropio::Connection::Configurable::BASE_URL}/#{resource}"
+        url += "/#{resource_method}" if resource_method
+        url
+      end
+
+      def extract_resource_method!(query)
+        fail(ArgumentError) unless query.is_a?(Hash)
+        query.delete(:resource_method)
       end
 
       def proxy(options)
         options[:headers] ||= {}
         options[:headers].merge!(headers)
+        clear_params_in_options!(options)
         res = send("proxy_#{options[:method]}", options)
         options[:method].eql?(:delete) ? res : JSON.parse(res)
       rescue RestClient::UnprocessableEntity => e
         puts JSON.parse(e.http_body)
         raise e
+      end
+
+      def clear_params_in_options!(options)
+        return if options[:headers][:params].nil?
+        options[:headers][:params].reject! { |_k, v| v.nil? }
       end
 
       def proxy_get(options)
