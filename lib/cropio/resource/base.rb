@@ -8,8 +8,6 @@ module Cropio
       PROXY = Cropio::Connection::Proxy
       LIMIT = 1000
 
-      TO_TIME = DateTime.new(2100)
-
       def initialize(attributes = {})
         self.attributes = attributes
       end
@@ -34,7 +32,9 @@ module Cropio
         all.count
       end
 
-      def self.changes(from_time, to_time = TO_TIME)
+      def self.changes(from_time = nil, to_time = nil)
+        from_time = to_datetime_if_string(from_time)
+        to_time = to_datetime_if_string(to_time)
         to_instances(get_all_changes(from_time, to_time))
       end
 
@@ -43,7 +43,7 @@ module Cropio
       # and not deleted, if this resource exists
       # on Cropio servers.
       def persisted?
-        @persisted.nil? && (@persisted ||= false)
+        !@persisted.nil? && (@persisted ||= false)
       end
 
       # Saves current resource to Cropio.
@@ -70,6 +70,14 @@ module Cropio
 
       private
 
+      def self.to_datetime_if_string(param)
+        if param.is_a?(Date) || param.is_a?(DateTime)
+          param.strftime
+        elsif !param.nil?
+          DateTime.parse(param).strftime
+        end
+      end
+
       # Returns pluralized name of own type.
       def resources_name
         self.class.resources_name
@@ -79,7 +87,7 @@ module Cropio
       def self.get_all_chunks(options = {})
         response = nil
         buffer = []
-        limit = options[:limit] || (2**32 - 1)
+        limit = options[:limit] || (2 ** 32 - 1)
         while data?(response) && limit > 0
           limit -= limit < LIMIT ? limit : LIMIT
           response = get_chunk(limit: limit, from_id: offset(buffer))
@@ -91,10 +99,9 @@ module Cropio
       def self.get_all_changes(from_time, to_time)
         response = nil
         buffer = []
-        limit = 2**32 - 1
+        limit = 2 ** 32 - 1
         while data?(response) && limit > 0
-          response = get_changes(limit: limit,
-                                 from_time: from_time,
+          response = get_changes(limit: limit, from_time: from_time,
                                  to_time: to_time)
           limit -= limit < LIMIT ? limit : LIMIT
           to_time = last_record_time(response) || from_time
@@ -129,10 +136,11 @@ module Cropio
       end
 
       def self.get_changes(options)
-        PROXY.changes(resources_name,
-                      limit: options[:limit],
-                      from_time: options[:from_time],
-                      to_time: options[:to_time])
+        PROXY.get(resources_name,
+                  resource_method: :changes,
+                  limit: options[:limit],
+                  from_time: options[:from_time],
+                  to_time: options[:to_time])
       end
 
       # Converts each received attribute's hash to resources.

@@ -7,7 +7,7 @@ module Cropio
       extend Configurable
       extend Proxiable
 
-      authenticate_before :get, :post, :patch, :delete, :changes
+      authenticate_before :get, :post, :patch, :delete
     end
   end
 end
