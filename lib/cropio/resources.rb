@@ -29,6 +29,9 @@ require_relative './resources/user'
 require_relative './resources/user_role'
 require_relative './resources/user_role_assignment'
 require_relative './resources/user_role_permission'
+require_relative './resources/version'
+require_relative './resources/work_record'
+require_relative './resources/work_record_machine_region_mapping_item'
 
 module Cropio
   module Resources
