@@ -34,6 +34,7 @@ require_relative './resources/work_record'
 require_relative './resources/work_record_machine_region_mapping_item'
 require_relative './resources/work_type_group'
 require_relative './resources/work_type'
+require_relative './resources/machine_task_field_mapping_item'
 
 module Cropio
   module Resources
