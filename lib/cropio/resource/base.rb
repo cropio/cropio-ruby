@@ -32,6 +32,10 @@ module Cropio
         all.count
       end
 
+      def self.ids
+        get_all_ids
+      end
+
       def self.changes(from_time = nil, to_time = nil)
         from_time = to_datetime_if_string(from_time)
         to_time = to_datetime_if_string(to_time)
@@ -141,6 +145,10 @@ module Cropio
                   limit: options[:limit],
                   from_time: options[:from_time],
                   to_time: options[:to_time])
+      end
+
+      def self.get_all_ids
+        PROXY.get(resources_name, resource_method: :ids)['data']
       end
 
       # Converts each received attribute's hash to resources.
