@@ -109,6 +109,12 @@ module Cropio
                                  to_time: to_time)
           limit -= limit < LIMIT ? limit : LIMIT
           to_time = last_record_time(response) || from_time
+
+          # if there is one record in time range we need to step back
+          # for 1ms to exclude cycling
+          if response['data'].count == 1
+            to_time = (Time.parse(to_time) - 1/999999.0).iso8601(6)
+          end
           buffer += response['data']
         end
         buffer

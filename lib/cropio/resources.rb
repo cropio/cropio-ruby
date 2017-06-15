@@ -41,6 +41,7 @@ require_relative './resources/machine_region'
 require_relative './resources/machine_region_mapping_item'
 require_relative './resources/implement_region_mapping_item'
 require_relative './resources/inventory_history_item'
+require_relative './resources/automatic_alert'
 
 
 module Cropio
