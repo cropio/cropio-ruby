@@ -29,4 +29,10 @@ module Cropio
       fail 'Cropio credentials should be a Hash or OpenStruct.'
     end
   end
+
+  # Setter for user api_token
+  # we can use this token for authenticate user without login and password
+  def self.api_token=(token)
+    @credentials = OpenStruct.new(api_token: token)
+  end
 end
