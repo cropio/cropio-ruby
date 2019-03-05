@@ -43,6 +43,8 @@ require_relative './resources/implement_region_mapping_item'
 require_relative './resources/inventory_history_item'
 require_relative './resources/automatic_alert'
 require_relative './resources/photo'
+require_relative './resources/soil_test'
+require_relative './resources/soil_test_sample'
 
 
 module Cropio
