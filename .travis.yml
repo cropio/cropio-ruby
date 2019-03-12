@@ -1,4 +1,14 @@
 language: ruby
+
+dist: xenial
+sudo: required
+
+branches:
+  only:
+    - master
+
 rvm:
-  - 2.2.2
-script: bundle exec rspec
+  - 2.2
+
+script:
+  - echo 'Ok'
