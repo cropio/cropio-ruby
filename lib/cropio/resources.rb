@@ -45,6 +45,16 @@ require_relative './resources/automatic_alert'
 require_relative './resources/photo'
 require_relative './resources/soil_test'
 require_relative './resources/soil_test_sample'
+require_relative './resources/maintenance_plan'
+require_relative './resources/maintenance_plan_row'
+require_relative './resources/maintenance_plan_row_spare_part_mapping_item'
+require_relative './resources/maintenance_record'
+require_relative './resources/maintenance_record_row'
+require_relative './resources/maintenance_record_row_spare_part_mapping_item'
+require_relative './resources/maintenance_type'
+require_relative './resources/maintenance_type_group'
+require_relative './resources/spare_part'
+require_relative './resources/spare_part_manufacturer'
 
 
 module Cropio
