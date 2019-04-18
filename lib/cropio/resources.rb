@@ -55,6 +55,12 @@ require_relative './resources/maintenance_type'
 require_relative './resources/maintenance_type_group'
 require_relative './resources/spare_part'
 require_relative './resources/spare_part_manufacturer'
+require_relative './resources/counterparty'
+require_relative './resources/field_shape_land_parcel_mapping_item'
+require_relative './resources/land_document'
+require_relative './resources/land_document_land_parcel_mapping_item'
+require_relative './resources/land_parcel'
+require_relative './resources/protected_document'
 
 
 module Cropio
