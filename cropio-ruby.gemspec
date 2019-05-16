@@ -27,7 +27,7 @@ STR
   spec.license = 'MIT'
 
   spec.add_dependency 'json'
-  spec.add_dependency 'rest-client'
+  spec.add_dependency 'rest-client', '~>2.1.0rc1'
 
   spec.add_development_dependency 'bundler', '~> 1.9'
   spec.add_development_dependency 'rake', '~> 10.0'
