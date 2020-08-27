@@ -62,7 +62,7 @@ require_relative './resources/land_document_land_parcel_mapping_item'
 require_relative './resources/land_parcel'
 require_relative './resources/protected_document'
 require_relative './resources/productivity_estimate_history'
-
+require_relative './resources/fuel_hourly_data_item'
 
 module Cropio
   module Resources
