@@ -7,7 +7,9 @@ module Cropio
       # Accepts reources name and params to perform HTTPS GET request.
       def get(resource, query = {})
         rmethod = extract_resource_method!(query)
-        proxy(method: :get, url: url_for(resource, rmethod),
+        id = extract_record_id!(query)
+
+        proxy(method: :get, url: url_for(resource, rmethod, id),
                             headers: { params: query })
       end
 
@@ -28,15 +30,23 @@ module Cropio
 
       protected
 
-      def url_for(resource, resource_method = nil)
+      def url_for(resource, resource_method = nil, id = nil)
         url = "#{Cropio::Connection::Configurable::BASE_URL}/#{resource}"
         url += "/#{resource_method}" if resource_method
+        url += "/#{id}" if id
         url
       end
 
       def extract_resource_method!(query)
-        fail(ArgumentError) unless query.is_a?(Hash)
+        raise ArgumentError unless query.is_a?(Hash)
+
         query.delete(:resource_method)
+      end
+
+      def extract_record_id!(query)
+        raise ArgumentError unless query.is_a?(Hash)
+
+        query.delete(:id)
       end
 
       def proxy(options)
@@ -48,10 +58,13 @@ module Cropio
       rescue RestClient::UnprocessableEntity => e
         puts JSON.parse(e.http_body)
         raise e
+      rescue RestClient::NotFound
+        {}
       end
 
       def clear_params_in_options!(options)
         return if options[:headers][:params].nil?
+
         options[:headers][:params].reject! { |_k, v| v.nil? }
       end
 

@@ -56,6 +56,11 @@ Currently supported API methods is:
 Crop.all
 ```
 
+- get record by id
+```ruby
+Crop.find(1)
+```
+
 - create
 
 ```ruby

@@ -42,6 +42,13 @@ module Cropio
         to_instances(get_all_changes(from_time, to_time))
       end
 
+      def self.find(id)
+        obj = PROXY.get(resources_name, id: id).fetch('data', nil)
+        return if obj.nil?
+
+        to_instance(obj)
+      end
+
       # Returns persistance of the resource.
       # Resource is persisted if it is saved
       # and not deleted, if this resource exists
