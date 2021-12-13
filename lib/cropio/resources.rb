@@ -65,6 +65,11 @@ require_relative './resources/productivity_estimate_history'
 require_relative './resources/fuel_hourly_data_item'
 require_relative './resources/productivity_estimate'
 require_relative './resources/productivity_estimate_peer'
+require_relative './resources/fuel_station'
+require_relative './resources/fuel_type'
+require_relative './resources/fuel_tank'
+require_relative './resources/fuel_pump'
+require_relative './resources/fuel_movement'
 
 module Cropio
   module Resources
