@@ -3,8 +3,8 @@ module Cropio
     # Contains logic for requests configuration
     # like appending headers to requests.
     module Configurable
-      # Cropio's server and API's entry point url
-      BASE_URL = 'https://cropio.com/api/v3'
+      # Cropwise server and API's entry point url
+      BASE_URL = 'https://operations.cropwise.com/api/v3'
 
       protected
 
