@@ -4,7 +4,7 @@ module Cropio
   module Connection
     # Contains logic of proxing calls to HTTPS requests.
     module Proxiable
-      # Accepts reources name and params to perform HTTPS GET request.
+      # Accepts resources name and params to perform HTTPS GET request.
       def get(resource, query = {})
         rmethod = extract_resource_method!(query)
         id = extract_record_id!(query)
@@ -13,17 +13,17 @@ module Cropio
                             headers: { params: query })
       end
 
-      # Accepts reources name and params to perform HTTPS POST request.
+      # Accepts resources name and params to perform HTTPS POST request.
       def post(resource, data)
         proxy(method: :post, url: url_for(resource), data: data)
       end
 
-      # Accepts reources name and params to perform HTTPS PATCH request.
+      # Accepts resources name and params to perform HTTPS PATCH request.
       def patch(resource, data)
         proxy(method: :patch, url: url_for(resource), data: data)
       end
 
-      # Accepts reources name and params to perform HTTPS DELETE request.
+      # Accepts resources name and params to perform HTTPS DELETE request.
       def delete(resource)
         proxy(method: :delete, url: url_for(resource))
       end
@@ -31,10 +31,16 @@ module Cropio
       protected
 
       def url_for(resource, resource_method = nil, id = nil)
-        url = "#{Cropio::Connection::Configurable::BASE_URL}/#{resource}"
+        url = resolve_api_url(resource)
         url += "/#{resource_method}" if resource_method
         url += "/#{id}" if id
         url
+      end
+
+      def resolve_api_url(resource)
+        Cropio::Connection::Configurable::BASE_URL +
+          (resource == 'weather_history_items' ? 'a' : '') +
+          "/#{resource}"
       end
 
       def extract_resource_method!(query)
