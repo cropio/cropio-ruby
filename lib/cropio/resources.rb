@@ -70,6 +70,7 @@ require_relative './resources/fuel_type'
 require_relative './resources/fuel_tank'
 require_relative './resources/fuel_pump'
 require_relative './resources/fuel_movement'
+require_relative './resources/weather_history_item'
 
 module Cropio
   module Resources
