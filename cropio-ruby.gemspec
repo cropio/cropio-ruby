@@ -29,7 +29,7 @@ STR
   spec.add_dependency 'json'
   spec.add_dependency 'rest-client', '~>2.1.0rc1'
 
-  spec.add_development_dependency 'bundler', '~> 1.9'
+  spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'byebug'
