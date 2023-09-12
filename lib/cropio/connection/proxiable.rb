@@ -4,6 +4,8 @@ module Cropio
   module Connection
     # Contains logic of proxing calls to HTTPS requests.
     module Proxiable
+      V3A_RESOURCES = %w[weather_history_items growth_scales].freeze
+
       # Accepts resources name and params to perform HTTPS GET request.
       def get(resource, query = {})
         rmethod = extract_resource_method!(query)
@@ -38,9 +40,9 @@ module Cropio
       end
 
       def resolve_api_url(resource)
-        Cropio::Connection::Configurable::BASE_URL +
-          (resource == 'weather_history_items' ? 'a' : '') +
-          "/#{resource}"
+        version_suffix = V3A_RESOURCES.include?(resource) ? 'a' : ''
+
+        "#{Cropio::Connection::Configurable::BASE_URL}#{version_suffix}/#{resource}"
       end
 
       def extract_resource_method!(query)
