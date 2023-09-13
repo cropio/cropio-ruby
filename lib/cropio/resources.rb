@@ -81,6 +81,7 @@ require_relative './resources/growth_scale'
 require_relative './resources/growth_stage'
 require_relative './resources/growth_stage_group'
 require_relative './resources/growth_stages_prediction'
+require_relative './resources/growth_stage_structure_mapping_item'
 
 module Cropio
   module Resources
