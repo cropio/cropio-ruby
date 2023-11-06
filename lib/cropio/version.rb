@@ -1,3 +1,3 @@
 module Cropio
-  VERSION = '0.36'.freeze
+  VERSION = '0.37'.freeze
 end
